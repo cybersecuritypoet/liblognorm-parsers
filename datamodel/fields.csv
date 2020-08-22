@@ -1,0 +1,32 @@
+Name, Description
+
+src_ip					,Source IP address, v4 or v6
+src_ipv4				,Source IPv4 address
+src_ipv6				,Source IPv6 address
+src_tcp_port
+src_udp_port
+src_mac
+ip_proto
+ip_proto_orig
+if_name
+
+
+src_user				,Source User - Initiator (Name)
+src_user_domain			,Source User - Initiator (Domain)
+src_user_id				,Source User - Initiator (ID – string)
+src_user_samname		,Source User - Initiator (SAMAccountName – Windwos only)
+src_user_primary_group	,Source User - Initiator (Primary Group)
+src_user_expiry			,Source User - Initiator (Expiration date)
+
+
+event_msg					,Message extracted from event
+event_process				,Process name that generated the event
+event_pid					,PID of the process that generated the event
+event_host					,Originating host
+event_syslog_severity		,
+event_syslog_priority		,
+event_syslog_facility		,
+session_id					,
+
+
+

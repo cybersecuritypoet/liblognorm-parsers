@@ -1,0 +1,8 @@
+source_field, destination_field
+
+src_ipv4	,src_ip
+src_ipv6	,src_ip
+
+src_hostname	,src_host
+src_ip			,src_host
+
