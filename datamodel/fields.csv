@@ -1,6 +1,6 @@
 Name, Description
 
-src_ip					,Source IP address, v4 or v6
+src_ip					,Source IP address - v4 or v6
 src_ipv4				,Source IPv4 address
 src_ipv6				,Source IPv6 address
 src_tcp_port			,
