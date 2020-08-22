@@ -3,12 +3,12 @@ Name, Description
 src_ip					,Source IP address, v4 or v6
 src_ipv4				,Source IPv4 address
 src_ipv6				,Source IPv6 address
-src_tcp_port
-src_udp_port
-src_mac
-ip_proto
-ip_proto_orig
-if_name
+src_tcp_port			,
+src_udp_port			,
+src_mac					,
+ip_proto				,
+ip_proto_orig			,
+if_name					,
 
 
 src_user				,Source User - Initiator (Name)
