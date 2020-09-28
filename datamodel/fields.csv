@@ -1,14 +1,27 @@
 Name, Description
+ip						,IP address referenced in message - v4 or v6
+ipv4					,IP v4 address referenced in message
+ipv6					,IP v6 address referenced in message
 
 src_ip					,Source IP address - v4 or v6
 src_ipv4				,Source IPv4 address
 src_ipv6				,Source IPv6 address
-src_tcp_port			,
-src_udp_port			,
-src_mac					,
-ip_proto				,
-ip_proto_orig			,
-if_name					,
+src_tcp_port			,Source TCP port
+src_udp_port			,Source UDP port
+src_mac					,Source MAC address
+
+ip_proto				,IP Protocol Identification: id or name
+ip_proto_name			,IP protocol "Keyword" field from IANA protocol numbers https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+ip_proto_full_name		,IP protocol "Protocol" field from IANA protocol numbers https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+ip_proto_id				,IP protocol "Decimal" field from IANA protocol numbers https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+ip_proto_reference		,IP protocol "Reference"  field from IANA protocol numbers https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+
+ip_proto_orig			,Original IP protocol +see ip_proto
+ip_proto_name_orig		,Original IP protocol +see ip_proto_name
+ip_proto_full_name_orig	,Original IP protocol +see ip_proto_full_name
+ip_proto_id_orig		,Original IP protocol +see ip_proto_id
+
+if_name					,Interface name
 
 
 src_user				,Source User - Initiator (Name)
@@ -17,6 +30,7 @@ src_user_id				,Source User - Initiator (ID – string)
 src_user_samname		,Source User - Initiator (SAMAccountName – Windwos only)
 src_user_primary_group	,Source User - Initiator (Primary Group)
 src_user_expiry			,Source User - Initiator (Expiration date)
+src_user_uuid			,Source User - ID in the form of UUID
 
 
 event_msg					,Message extracted from event
@@ -27,6 +41,16 @@ event_syslog_severity		,
 event_syslog_priority		,
 event_syslog_facility		,
 session_id					,
+
+
+cipher			,
+key_size		,
+key_algo		,
+key_hash_algo	,
+key_hash		,
+
+
+l7_proto		,OSI Layer 7 protocol
 
 
 

@@ -1,0 +1,22 @@
+Name,Description
+
+remote		,Event is regarding remote activity
+local		,Event is regarding local activity
+fail		,Event is regarding a failed action
+success		,Event is regarding a successfully completed action
+
+auth		,Event is regarding authentication
+conn		,Event is regarding connection
+
+
+invalid_user			,Requested user is invalid for this system
+user_not_allowed		,User is valid but not allowed by system configuration
+connection_closed		,Connection was closed during the activity
+too_many_tries			,The action was throttled due to reaching the limit
+too_many_tries_invalid	,The action was throttled due to reaching the limit and an argument was invalid
+revoked_key				,The key was revoked
+timeout_before_auth		,Timeout occured before authentication was completed
+
+
+sshd		,Event is regarding SSHD service
+dhcpd		,Event is regarding DHCPD service

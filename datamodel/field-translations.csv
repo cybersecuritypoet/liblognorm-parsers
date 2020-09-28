@@ -1,8 +1,16 @@
 source_field, destination_field
 
+ipv4		,ip
+ipv6		,ip
+
 src_ipv4	,src_ip
 src_ipv6	,src_ip
+
+dst_ipv4	,dst_ip
+dst_ipv6	,dst_ip
 
 src_hostname	,src_host
 src_ip			,src_host
 
+ip_proto_name	,ip_proto
+ip_proto_id		,ip_proto
