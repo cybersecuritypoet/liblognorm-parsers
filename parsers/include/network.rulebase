@@ -42,7 +42,8 @@ type=@ip4:%{"type":"alternative","parser": [{"name":"ipv4_4", "type":"ipv4"},{"n
 type=@ip_to_colon:%{"type":"char-to", "name":"ip", "extradata":":"}%
 type=@ip_to_semicolon:%{"type":"char-to", "name":"ip", "extradata":";"}%
 
-type=@src_net_port:%src_port:number{"format":"number"}%
+type=@src_net_port:%src_net_port:number{"format":"number"}%
+type=@dst_net_port:%dst_net_port:number{"format":"number"}%
 type=@src_port:%src_port:number{"format":"number"}%
 type=@dst_port:%dst_port:number{"format":"number"}%
 type=@src_port_orig:%src_port_orig:number{"format":"number"}%
