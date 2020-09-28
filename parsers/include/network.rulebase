@@ -1,0 +1,67 @@
+version=2
+# Network
+type=@ip_proto:%ip_proto:word%
+
+type=@ip_proto_orig:%ip_proto_orig:word%
+
+# Interfaces
+type=@if_name:%if_name:word%
+type=@if_name_to_colon:%{"type":"char-to", "name":"if_name", "extradata":":"}%
+type=@if_name_semicolon:%{"type":"char-to", "name":"if_name", "extradata":";"}%
+
+# MAC Addresses
+type=@dst_mac:%dst_mac:mac48%
+
+type=@src_mac:%src_mac:mac48%
+
+type=@mac:%mac:mac48%
+
+# Peer
+type=@peer:%peer:word%
+
+type=@subnet_ip:%subnet_ip:{"name":"subnet_ip", "type":"ipv4"}%
+
+
+type=@dst_host:%{"type":"alternative","parser": [{"name":"dst_ipv4", "type":"ipv4"},{"name":"dst_ipv6", "type":"ipv6"},{"name":"dst_host", "type":"word"}]}%
+type=@src_host:%{"type":"alternative","parser": [{"name":"src_ipv4", "type":"ipv4"},{"name":"src_ipv6", "type":"ipv6"},{"name":"src_host", "type":"word"}]}%
+
+type=@dst_hostname:%{"name":"dst_hostname", "type":"word"}%
+type=@src_hostname:%{"name":"src_hostname", "type":"word"}%
+
+type=@dst_ip:%{"type":"alternative","parser": [{"name":"dst_ipv4", "type":"ipv4"},{"name":"dst_ipv6", "type":"ipv6"}]}%
+type=@src_ip:%{"type":"alternative","parser": [{"name":"src_ipv4", "type":"ipv4"},{"name":"src_ipv6", "type":"ipv6"}]}%
+type=@dst_ip_orig:%{"type":"alternative","parser": [{"name":"dst_ipv4_orig", "type":"ipv4"},{"name":"dst_ipv6_orig", "type":"ipv6"}]}%
+type=@src_ip_orig:%{"type":"alternative","parser": [{"name":"src_ipv4_orig", "type":"ipv4"},{"name":"src_ipv6_orig", "type":"ipv6"}]}%
+
+type=@ip:%{"type":"alternative","parser": [{"name":"ipv4", "type":"ipv4"},{"name":"ipv6", "type":"ipv6"}]}%
+type=@ip1:%{"type":"alternative","parser": [{"name":"ipv4_1", "type":"ipv4"},{"name":"ipv6_1", "type":"ipv6"}]}%
+type=@ip2:%{"type":"alternative","parser": [{"name":"ipv4_2", "type":"ipv4"},{"name":"ipv6_2", "type":"ipv6"}]}%
+type=@ip3:%{"type":"alternative","parser": [{"name":"ipv4_3", "type":"ipv4"},{"name":"ipv6_3", "type":"ipv6"}]}%
+type=@ip4:%{"type":"alternative","parser": [{"name":"ipv4_4", "type":"ipv4"},{"name":"ipv6_4", "type":"ipv6"}]}%
+
+type=@ip_to_colon:%{"type":"char-to", "name":"ip", "extradata":":"}%
+type=@ip_to_semicolon:%{"type":"char-to", "name":"ip", "extradata":";"}%
+
+type=@src_net_port:%src_port:number{"format":"number"}%
+type=@src_port:%src_port:number{"format":"number"}%
+type=@dst_port:%dst_port:number{"format":"number"}%
+type=@src_port_orig:%src_port_orig:number{"format":"number"}%
+type=@dst_port_orig:%dst_port_orig:number{"format":"number"}%
+
+type=@ip_port:%ip_port:number{"format":"number"}%
+type=@ip_port1:%ip_port1:number{"format":"number"}%
+type=@ip_port2:%ip_port2:number{"format":"number"}%
+type=@ip_port3:%ip_port3:number{"format":"number"}%
+type=@ip_port4:%ip_port4:number{"format":"number"}%
+
+type=@foreign_ip:%{"type":"alternative","parser": [{"name":"foreign_ipaddr", "type":"ipv4"},{"name":"foreign_ipaddr", "type":"ipv6"}]}%
+type=@global_ip:%{"type":"alternative","parser": [{"name":"global_ipaddr", "type":"ipv4"},{"name":"global_ipaddr", "type":"ipv6"}]}%
+type=@foreign_icmp_id:%foreign_icmp_id:number{"format":"number"}%
+type=@global_icmp_id:%global_icmp_id:number{"format":"number"}%
+type=@local_icmp_id:%local_icmp_id:number{"format":"number"}%
+type=@src_mapped_ip:%{"type":"alternative","parser": [{"name":"foreign_src_mapped_ipaddr", "type":"ipv4"},{"name":"foreign_src_mapped_ipaddr", "type":"ipv6"}]}%
+type=@src_mapped_port:%src_mapped_port:number{"format":"number"}%
+type=@dst_mapped_port:%dst_mapped_port:number{"format":"number"}%
+type=@translation_type:%translation_type:word%
+type=@connection_id:%conn_id:number{"format":"number"}%
+type=@connection_bytes:%conn_bytes:number{"format":"number"}%

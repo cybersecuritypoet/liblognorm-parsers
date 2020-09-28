@@ -1,0 +1,4 @@
+version=2
+
+type=@file_path:%file_path:word%
+type=@file_name:%file_name:word%
