@@ -1,0 +1,5 @@
+DHCPREQUEST for 192.168.2.41 from 6F:5F:D7:96:B1:FE via eth3
+DHCPREQUEST for 10.0.1.32 from 2a:a5:54:5c:5d:f5 via eth3.1243
+DHCPREQUEST for 172.16.0.3 from 2a:a5:54:5c:5d:f5 via eth3.11
+DHCPREQUEST for 172.16.23.0 from 2a-d6-cd-51-b9-89 via eth3.11
+DHCPREQUEST for 172.16.23.0 from 2a-d6-Cd-51-B9-89 via eth3.11

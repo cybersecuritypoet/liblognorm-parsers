@@ -1,0 +1,4 @@
+DHCPOFFER on 129.67.103.10 to 00:22:44:66:88:aa (steveballmer) via 129.67.103.254
+DHCPOFFER on 129.67.103.1 to 00:11:22:33:44:55 (billgates) via 129.67.103.254
+DHCPOFFER on 129.67.103.10 to 00:22:44:66:88:aa (steveballmer) via eth0
+DHCPOFFER on 129.67.103.1 to 00:11:22:33:44:55 (billgates) via eth3.123

@@ -1,0 +1,2 @@
+DHCPACK on 129.67.103.1 to 00:11:22:33:44:55 (billgates) via eth0
+DHCPACK on 1.1.1.1 to c6-87-5c-3b-5f-ae (billgates) via eth0.23

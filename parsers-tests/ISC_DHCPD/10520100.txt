@@ -1,0 +1,2 @@
+DHCPDISCOVER from 40:01:1c:47:44:1e via eth0
+DHCPDISCOVER from 08:00:27:88:0b:f3 via eth0
