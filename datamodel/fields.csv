@@ -6,8 +6,8 @@ ipv6					,IP v6 address referenced in message
 src_ip					,Source IP address - v4 or v6
 src_ipv4				,Source IPv4 address
 src_ipv6				,Source IPv6 address
-src_tcp_port			,Source TCP port
-src_udp_port			,Source UDP port
+src_net_port			,Source TCP port
+src_net_port			,Source UDP port
 src_mac					,Source MAC address
 
 ip_proto				,IP Protocol Identification: id or name

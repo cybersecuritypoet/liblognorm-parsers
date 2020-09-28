@@ -8,8 +8,8 @@ version=2
 # https://help.it.ox.ac.uk/network/dhcp/logs/index
 
 type=@ISC_DHCPD_hostname:%client_hostname:char-to{"extradata":")"}%
-type=@ISC_DHCPD_if_or_ip:%{"type":"alternative","parser": [{"name":"dst_ipv4", "type":"ipv4"},{"name":"if_name", "type":"word"}]}%
-type=@ISC_DHCPD_ip_or_if_to_colon:%{"type":"alternative","parser": [{"name":"dst_ipv4", "type":"ipv4"},{"name":"if_name", "type":"char-to", "extradata":":"}]}%
+type=@ISC_DHCPD_if_or_ip:%{"type":"alternative","parser": [{"name":"dst_ipv4", "type":"ipv4"},{"name":"dst_ipv6", "type":"ipv6"},{"name":"if_name", "type":"word"}]}%
+type=@ISC_DHCPD_ip_or_if_to_colon:%{"type":"alternative","parser": [{"name":"dst_ipv4", "type":"ipv4"},{"name":"dst_ipv6", "type":"ipv6"},{"name":"if_name", "type":"char-to", "extradata":":"}]}%
 
 #### ACK
 # .id 10520000
