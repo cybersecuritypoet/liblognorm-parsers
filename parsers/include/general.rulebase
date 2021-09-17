@@ -1,5 +1,9 @@
 version=2
+# General
+type=@n:%n:number{"format":"number"}%
 
+#### File
 type=@file_path:%file_path:word%
-type=@file_name:%file_name:word%
-type=@dvc:%dvc:word%
+
+#### Process
+type=@signal:%{"type":"alternative","parser": [{"name":"signal", "type":"number", "format":"number"},{"name":"signal_name", "type":"word"}]}%

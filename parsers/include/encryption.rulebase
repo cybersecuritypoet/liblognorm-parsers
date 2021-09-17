@@ -1,11 +1,12 @@
 version=2
-## Encryption
+# Encryption
+
 # Keys
-type=@key_hash:%key_hash:word%
-type=@key_hash_algo:%key_hash_algo:word%
 type=@key_algo:%key_algo:word%
-type=@key_size:%key_size:number{"format":"number"}%
-# Cipher
-type=@cipher:%cipher:word%
-# Misc
-type=@enc_mac:%mac:word%
+type=@key_hash:%key_hash:word%
+
+type=@key_fingerprint_algo:%key_fingerprint_algo:word%
+type=@key_fingerprint:%key_fingerprint:word%
+
+# SSL/TLS
+type=@cipher_suite:%cipher_suite:word%

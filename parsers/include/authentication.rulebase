@@ -1,10 +1,9 @@
 version=2
 # Authentication
 type=@auth_method:%auth_method:word%
-type=@ssh_proto:%ssh_proto:word%
 
 # Users
-type=@src_user_name:%src_acct_name:word%
-type=@dst_user_name:%dst_acct_name:word%
-type=@uid:%uid:number{"format":"number"}%
-type=@euid:%euid:number{"format":"number"}%
+type=@user_login:%user_login:word%
+
+# Misc
+type=@auth_phase:%auth_phase:word%
