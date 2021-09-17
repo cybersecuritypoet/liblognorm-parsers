@@ -1,0 +1,241 @@
+version=2
+# @author cybersecuritypoet
+# @author-git https://github.com/cybersecuritypoet
+# @date 28.09.2020
+# +include authentication
+# +include network
+# +include encryption
+# +include general
+# :supported current
+#
+# #ID 1051
+#
+# #Range 1000-9000
+# %resource https://ossec-docs.readthedocs.io/en/latest/docs/log_samples/auth/sshd.html
+#
+
+type=@OpenSSH_user_login_to_bracket:%user_login:char-to{"extradata":"]"}%
+type=@OpenSSH_client_msg:%client_msg:string-to{"extradata":" ["}%
+type=@OpenSSH_l7proto_to_colon:%l7proto:char-to{"extradata":":"}% 
+type=@OpenSSH_proto_id_string:%proto_id_string:char-to{"extradata":"\""}%
+type=@OpenSSH_proto_id_string_to_sqote:%proto_id_string:char-to{"extradata":"'"}%
+type=@OpenSSH_cipher_suite:%cipher_suite:char-to{"extradata":" "}%
+type=@OpenSSH_kex_cipher_suite:%kex_cipher_suite:word%
+type=@OpenSSH_kex_ciphers:%{"name":"kex_ciphers","type":"repeat","parser":[{"type":"char-to","extradata":",","name":"cipher_suite"}],"while":{"type":"literal", "text":","}}%
+type=@OpenSSH_auth_phase:%auth_phase:char-to{"extradata":":"}%
+type=@OpenSSH_user_login_to_from:%user_login:string-to{"extradata":" from"}%
+type=@OpenSSH_key_fingerprint_algo_to_colon:%key_fingerprint_algo:char-to{"extradata":":"}%
+type=@OpenSSH_ssh_service:%ssh_service:word%
+
+
+# Auth:
+# 1. [remote] auth+success
+# 2. [remote] attempt+fail	->	auth+fail	-> preauth,disconnect
+#							-> preauth,conn_closed
+#							-> preauth,conn_reset
+#							-> preauth,conn_closed
+
+###############################################################################
+#### Auth success
+# .id 10513609
+rule=sshd,auth,remote,success:Accepted %.:@auth_method% for %.:@OpenSSH_user_login_to_from% from %.:@src_host% port %.:@src_port% %.:@l7proto%
+# .id 10516869
+rule=sshd,auth,remote,success,empty_user_login:Accepted %.:@auth_method% for  from %.:@src_host% port %.:@src_port% %.:@l7proto%
+# .id 10517752
+rule=sshd,auth,remote,success:Accepted %.:@auth_method% for %.:@OpenSSH_user_login_to_from% from %.:@src_host% port %.:@src_port% ssh2: %.:@key_algo% %.:@key_fingerprint_algo%:%.:@key_fingerprint%
+# .id 10518695
+rule=sshd,auth,remote,success:Accepted %.:@auth_method% for  from %.:@src_host% port %.:@src_port% ssh2: %.:@key_algo% %.:@key_fingerprint_algo%:%.:@key_fingerprint%
+
+###############################################################################
+#### Auth failure
+# .id 10511627
+rule=sshd,auth,remote,fail:Failed %.:@auth_method% for %.:@OpenSSH_user_login_to_from% from %.:@src_host% port %.:@src_port% %.:@l7proto%
+# .id 10515355
+rule=sshd,auth,remote,fail,empty_user_login:Failed %.:@auth_method% for  from %.:@src_host% port %.:@src_port% %.:@l7proto%
+# .id 10514687
+rule=sshd,auth,remote,fail,invalid_user:Failed %.:@auth_method% for invalid user %.:@OpenSSH_user_login_to_from% from %.:@src_host% port %.:@src_port% %.:@l7proto%
+# .id 10512196
+rule=sshd,auth,remote,fail,invalid_user,empty_user_login:Failed %.:@auth_method% for invalid user  from %.:@src_host% port %.:@src_port% %.:@l7proto%
+# .id 10513708
+rule=sshd,auth,remote,attempt,invalid_user:Invalid user %.:@OpenSSH_user_login_to_from% from %.:@src_host% port %.:@src_port%
+# .id 10514492
+rule=sshd,auth,remote,attempt,invalid_user,empty_user_login:Invalid user  from %.:@src_host% port %.:@src_port%
+# .id 10515092
+rule=sshd,auth,remote,attempt,invalid_user:Invalid user %.:@OpenSSH_user_login_to_from% from %.:@src_host%
+# .id 10517416
+rule=sshd,auth,remote,attempt,invalid_user,empty_user_login:Invalid user  from %.:@src_host%
+# .id 10513027
+rule=sshd,auth,remote,fail,user_not_allowed:User %.:@OpenSSH_user_login_to_from% from %.:@src_host% not allowed because not listed in AllowUsers
+# .id 10514140
+rule=sshd,auth,remote,fail,user_not_allowed,empty_user_login:User  from %.:@src_host% not allowed because not listed in AllowUsers
+
+###############################################################################
+#### Auth failure (Keys)
+# .id 10514482
+rule=sshd,auth,remote,fail,revoked_key:error: Authentication key %.:@key_algo% %.:@OpenSSH_key_fingerprint_algo_to_colon%:%.:@key_hash% revoked by file %.:@file_path%
+# .id 10513146
+rule=sshd,preauth,remote,unable_to_negotiate,no_host_key_type_match:Unable to negotiate with %.:@src_host% port %.:@src_port%: no matching host key type found. Their offer: %.:@OpenSSH_cipher_suite% [preauth]
+
+###############################################################################
+#### Connection closed (preauth)
+# .id 10518265
+rule=sshd,preauth,remote,conn_closed:Connection closed by %.:@src_host% port %.:@src_port% [preauth]
+# .id 10512450
+rule=sshd,preauth,remote,conn_closed:Connection closed by authenticating user %.:@user_login% %.:@src_host% port %.:@src_port% [preauth]
+# .id 10518670
+rule=sshd,preauth,remote,conn_closed,empty_user_login:Connection closed by authenticating user  %.:@src_host% port %.:@src_port% [preauth]
+# .id 10514940
+rule=sshd,preauth,remote,conn_closed,invalid_user:Connection closed by invalid user %.:@user_login% %.:@src_host% port %.:@src_port% [preauth]
+# .id 10516350
+rule=sshd,preauth,remote,conn_closed,invalid_user,empty_user_login:Connection closed by invalid user  %.:@src_host% port %.:@src_port% [preauth]
+# .id 10517792
+rule=sshd,preauth,remote,conn_closed:Disconnected from %.:@src_host% port %.:@src_port% [preauth]
+# .id 10512773
+rule=sshd,preauth,remote,conn_closed:Disconnected from authenticating user %.:@user_login% %.:@src_host% port %.:@src_port% [preauth]
+# .id 10517590
+rule=sshd,preauth,remote,conn_closed,empty_user_login:Disconnected from authenticating user  %.:@src_host% port %.:@src_port% [preauth]
+# .id 10516008
+rule=sshd,preauth,remote,conn_closed:Disconnected from invalid user %.:@user_login% %.:@src_host% port %.:@src_port% [preauth]
+# .id 10513308
+rule=sshd,preauth,remote,conn_closed,empty_user_login:Disconnected from invalid user  %.:@src_host% port %.:@src_port% [preauth]
+# .id 10513832
+rule=sshd,preauth,remote,conn_closed:Received disconnect from %.:@src_host% port %.:@src_port%:%unk_code_line:number%: %.:@OpenSSH_client_msg% [preauth]
+# .id 10512489
+rule=sshd,preauth,remote,conn_closed:Received disconnect from %.:@src_host% port %.:@src_port%:%unk_code_line:number%:  [preauth]
+# .id 10512557
+rule=sshd,init,remote,conn_closed:error: %.:@OpenSSH_auth_phase%: Connection closed by remote host
+# .id 10514544
+rule=sshd,init,remote,conn_timeout:fatal: Timeout before authentication for %.:@src_host% port %.:@src_port%
+# .id 10513738
+rule=sshd,preauth,remote,conn_reset:Connection reset by %.:@src_host% port %.:@src_port% [preauth]
+# .id 10517030
+rule=sshd,preauth,remote,conn_reset:Connection reset by invalid user %.:@user_login% %.:@src_host% port %.:@src_port% [preauth]
+# .id 10516236
+rule=sshd,preauth,remote,conn_reset,empty_user_login:Connection reset by invalid user  %.:@src_host% port %.:@src_port% [preauth]
+# .id 10516474
+rule=sshd,preauth,remote,conn_reset:Connection reset by authenticating user %.:@user_login% %.:@src_host% port %.:@src_port% [preauth]
+# .id 10516217
+rule=sshd,preauth,remote,conn_reset,empty_user_login:Connection reset by authenticating user  %.:@src_host% port %.:@src_port% [preauth]
+# .id 10518840
+rule=sshd,preauth,remote,disconnect,bad_service_request:Disconnecting %.:@src_host% port %.:@src_port%: bad service request %.:@OpenSSH_ssh_service% [preauth]
+
+###############################################################################
+#### Too many authentication failures (preauth)
+# .id 10518817
+rule=sshd,auth,preauth,remote,fail,disconnect,attempts_exceeded:Disconnecting authenticating user %.:@user_login% %.:@src_host% port %.:@src_port%: Too many authentication failures [preauth]
+# .id 10512815
+rule=sshd,auth,preauth,remote,fail,disconnect,attempts_exceeded,empty_user_login:Disconnecting authenticating user  %.:@src_host% port %.:@src_port%: Too many authentication failures [preauth]
+# .id 10511409
+rule=sshd,auth,preauth,remote,fail,disconnect,attempts_exceeded,invalid_user:Disconnecting invalid user %.:@user_login% %.:@src_host% port %.:@src_port%: Too many authentication failures [preauth]
+# .id 10515730
+rule=sshd,auth,preauth,remote,fail,disconnect,attempts_exceeded,empty_user_login,invalid_user:Disconnecting invalid user  %.:@src_host% port %.:@src_port%: Too many authentication failures [preauth]
+# .id 10513013
+rule=sshd,auth,remote,error,attempts_exceeded:error: maximum authentication attempts exceeded for %.:@OpenSSH_user_login_to_from% from %.:@src_host% port %.:@src_port% %.:@l7proto% [preauth]
+# .id 10517080
+rule=sshd,auth,remote,error,attempts_exceeded:error: maximum authentication attempts exceeded for invalid user %.:@OpenSSH_user_login_to_from% from %.:@src_host% port %.:@src_port% %.:@l7proto% [preauth]
+# .id 10511194
+rule=sshd,auth,remote,error,attempts_exceeded,empty_user_login:error: maximum authentication attempts exceeded for  from %.:@src_host% port %.:@src_port% %.:@l7proto% [preauth]
+
+###############################################################################
+#### Misc
+# .id 10518831
+rule=sshd,preauth,error,remote,no_id_string:Did not receive identification string from %.:@src_host%
+# .id 10516010
+rule=sshd,preauth,error,remote,invalid_proto_id_string:error: %.:@OpenSSH_auth_phase%: client sent invalid protocol identifier "%.:@OpenSSH_proto_id_string%"
+# .id 10515952
+rule=sshd,preauth,error,remote,invalid_proto_id_string,empty_proto_id:error: %.:@OpenSSH_auth_phase%: client sent invalid protocol identifier ""
+# .id 10518232
+rule=sshd,preauth,error,remote,key_exchange,conn_reset,read_error:error: %.:@OpenSSH_auth_phase%: read: Connection reset by peer
+# .id 10518465
+rule=sshd,preauth,error,remote,key_exchange,banner_invalid_chars:error: %.:@OpenSSH_auth_phase%: banner line contains invalid characters
+# .id 10517628
+rule=sshd,remote,error,logout:syslogin_perform_logout: logout() returned an error
+# .id 10518252
+rule=sshd,remote,error,send_error,conn_reset,write_error:error: send_error: write: Connection reset by peer
+# .id 10513098
+rule=sshd,remote,postponed_keyboard_interactive:Postponed keyboard-interactive for %.:@user_login% from %.:@src_host% port %.:@src_port% %.:@l7proto% [preauth]
+# .id 10512487
+rule=sshd,remote,postponed_keyboard_interactive:Postponed keyboard-interactive for invalid user %.:@user_login% from %.:@src_host% port %.:@src_port% %.:@l7proto% [preauth]
+# .id 15011558
+rule=sshd,remote,error,ssh_version_differ:error: Protocol major versions differ: 2 vs. 1
+# .id 10515211
+rule=sshd,remote,error,conn_reset,write_error:error: %.:@OpenSSH_auth_phase%: write: Connection reset by peer
+# .id 10512981
+rule=sshd,preauth,error,remote,no_matching_kex:Unable to negotiate with %.:@src_host% port %.:@src_port%: no matching key exchange method found. Their offer: %.:@OpenSSH_kex_ciphers% [preauth]
+# .id 10514428
+rule=sshd,preauth,error,remote,no_matching_kex:Unable to negotiate with %.:@src_host% port %.:@src_port%: no matching key exchange method found. Their offer: %.:@OpenSSH_kex_cipher_suite% [preauth]
+# .id 10517149
+rule=sshd,preauth,error,remote,broken_pipe:fatal: %.:@OpenSSH_auth_phase%: Broken pipe [preauth]
+# .id 10518256
+rule=sshd,pam,error,pam_error:error: PAM: Authentication failure for %.:@OpenSSH_user_login_to_from% from %.:@src_host%
+# .id 10511714
+rule=sshd,pam,error,pam_error:error: PAM: Authentication failure for illegal user %.:@OpenSSH_user_login_to_from% from %.:@src_host%
+# .id 10517184
+rule=sshd,preauth,error,remote,conn_reset:fatal: %.:@OpenSSH_auth_phase%: Connection reset by peer [preauth]
+# .id 10511784
+rule=sshd,preauth,error,remote,broken_pipe:ssh_dispatch_run_fatal: Connection from %.:@src_host% port %.:@src_port%: Broken pipe [preauth]
+# .id 10512289
+rule=sshd,preauth,error,remote,mac_incorrect:ssh_dispatch_run_fatal: Connection from authenticating user %.:@user_login% %.:@src_host% port %.:@src_port%: message authentication code incorrect [preauth]
+# .id 10511985
+rule=sshd,preauth,error,remote,mac_incorrect:ssh_dispatch_run_fatal: Connection from %.:@src_host% port %.:@src_port%: message authentication code incorrect [preauth]
+# .id 10514740
+rule=sshd,preauth,error,remote,bad_pkt_len:Bad packet length %.:@pkt_len%. [preauth]
+# .id 10517348
+rule=sshd,preauth,error,remote,conn_closed:error: Received disconnect from %.:@src_host% port %.:@src_port%:%unk_code_line:number%: %.:@OpenSSH_client_msg% [preauth]
+# .id 10517523
+rule=sshd,error,remote,invalid_proto_id_string:error: Bad remote protocol version identification: '%.:@OpenSSH_proto_id_string_to_sqote%'
+
+#TODO: key authentication. Not supported, etc.
+
+###############################################################################
+#### Service
+# .id 10514470
+rule=sshd,service,shutdown:Received signal %.:@signal%; terminating.
+# .id 10511720
+rule=sshd,service,listen_start:Server listening on %.:@dst_host% port %.:@dst_port%.
+
+###############################################################################
+#### EXT
+# .id 10517979
+rule=sshd,_ext,sshd_pam:PAM %.:@n% more authentication failures; logname= uid=%-:number% euid=%-:number% tty=ssh ruser= rhost=%.:@src_host%
+# .id 10512150
+rule=sshd,_ext,sshd_pam:PAM %.:@n% more authentication failure; logname= uid=%-:number% euid=%-:number% tty=ssh ruser= rhost=%.:@src_host%
+# .id 10518040
+rule=sshd,_ext,sshd_pam:PAM %.:@n% more authentication failures; logname= uid=%-:number% euid=%-:number% tty=ssh ruser= rhost=%.:@src_host%  user=%.:@user_login%
+# .id 10518875
+rule=sshd,_ext,sshd_pam:PAM %.:@n% more authentication failure; logname= uid=%-:number% euid=%-:number% tty=ssh ruser= rhost=%.:@src_host%  user=%.:@user_login%
+# .id 10516441
+rule=sshd,_ext,sshd_pam:pam_unix(sshd:auth): check pass; user unknown
+# .id 10517115
+rule=sshd,_ext,sshd_pam:pam_unix(sshd:auth): authentication failure; logname= uid=%-:number% euid=%-:number% tty=ssh ruser= rhost=%.:@src_host%
+# .id 10511727
+rule=sshd,_ext,sshd_pam:pam_unix(sshd:auth): authentication failure; logname= uid=%-:number% euid=%-:number% tty=ssh ruser= rhost=%.:@src_host%  user=%.:@user_login%
+# .id 10511043
+rule=sshd,_ext,sshd_pam,invalid_user:pam_unix(sshd:auth): bad username [%.:@OpenSSH_user_login_to_bracket%]
+# .id 10511913
+rule=sshd,_ext,sshd_pam:pam_unix(sshd:session): session opened for user %.:@user_login% by (uid=%-:number%)
+# .id 10511003
+rule=sshd,_ext,sshd_pam,empty_user_login:pam_unix(sshd:session): session opened for user  by (uid=%-:number%)
+# .id 10518624
+rule=sshd,_ext,sshd_pam:pam_unix(sshd:session): session closed for user %.:@user_login%
+# .id 10517592
+rule=sshd,_ext,sshd_pam,empty_user_login:pam_unix(sshd:session): session closed for user
+
+
+###############################################################################
+annotate=ssh_version_differ:+error="ssh_version_differ"
+annotate=attempts_exceeded:+error="attempts_exceeded"
+annotate=no_id_string:+error="no_id_string"
+annotate=invalid_proto_id_string:+error="invalid_proto_id_string"
+annotate=banner_invalid_chars:+error="banner_invalid_chars"
+annotate=no_id_string:+error="no_id_string"
+annotate=send_error:+error="send_error"
+annotate=write_error:+error="write_error"
+annotate=read_error:+error="read_error"
+annotate=no_matching_kex:+error="no_matching_kex"
+annotate=broken_pipe:+error="broken_pipe"
+annotate=pam_error:+error="pam_error"
+annotate=mac_incorrect:+error="mac_incorrect"
+annotate=bad_pkt_len:+error="bad_pkt_len"
+annotate=no_id_string:+error="no_id_string"
+annotate=no_id_string:+error="no_id_string"
