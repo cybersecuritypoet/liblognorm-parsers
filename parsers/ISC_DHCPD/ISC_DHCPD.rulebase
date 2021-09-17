@@ -4,107 +4,233 @@ version=2
 # @date 28.09.2020
 # :supported current
 # +include network
-#
-# https://help.it.ox.ac.uk/network/dhcp/logs/index
+# +include general
+# #ID 1052
+# %resource https://help.it.ox.ac.uk/network/dhcp/logs/index
+# // Supports Cisco ISE logs/index
 
-type=@ISC_DHCPD_hostname:%client_hostname:char-to{"extradata":")"}%
+type=@ISC_DHCPD_hostname:%client_hostname:string-to{"extradata":") via "}%
 type=@ISC_DHCPD_if_or_ip:%{"type":"alternative","parser": [{"name":"dst_ipv4", "type":"ipv4"},{"name":"dst_ipv6", "type":"ipv6"},{"name":"if_name", "type":"word"}]}%
 type=@ISC_DHCPD_ip_or_if_to_colon:%{"type":"alternative","parser": [{"name":"dst_ipv4", "type":"ipv4"},{"name":"dst_ipv6", "type":"ipv6"},{"name":"if_name", "type":"char-to", "extradata":":"}]}%
+type=@ISC_DHCPD_if2:%{"name":"if2_name", "type":"word"}%
+type=@ISC_DHCPD_if2_to_colon:%{"name":"if2_name", "type":"char-to", "extradata":":"}%
+type=@ISC_DHCPD_if_to_slash:%{"name":"if2_name", "type":"char-to", "extradata":"/"}%
 
+###############################################################################
 #### ACK
-# .id 10520000
-rule=dhcpd,ack:DHCPACK to %.:@dst_ip%
-# .id 10520001
-rule=dhcpd,ack:DHCPACK on %.:@ip% to %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
-# .id 10520002
-rule=dhcpd,ack:DHCPACK on %.:@ip% to %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
+prefix=DHCPACK 
+# .id 10523362
+rule=dhcpd,ack:to %.:@dst_ip%
+# .id 10522506
+rule=dhcpd,ack:to %.:@dst_ip% (%.:@mac%) via %.:@ISC_DHCPD_if_or_ip%
+# .id 10525825
+rule=dhcpd,ack:on %.:@ip% to %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
+# .id 10528947
+rule=dhcpd,ack:on %.:@ip% to %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
 
 
+###############################################################################
 #### REQUEST
-# .id 10520054
-rule=dhcpd,req,wrong_net:DHCPREQUEST for %.:@ip% from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: wrong network
-# .id 10520055
-rule=dhcpd,req,wrong_net:DHCPREQUEST for %.:@ip% (%-:@ip%) from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: wrong network
-# .id 10520056
-rule=dhcpd,req,lease_owned_by_peer:DHCPREQUEST for %.:@ip% from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer
-# .id 10520057
-rule=dhcpd,req,lease_owned_by_peer:DHCPREQUEST for %.:@ip% from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer
-# .id 10520058
-rule=dhcpd,req,lease_owned_by_peer:DHCPREQUEST for %.:@ip% (%-:@ip%) from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer
-# .id 10520059
-rule=dhcpd,req,load_balance:DHCPREQUEST for %.:@ip% from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
-# .id 10520060
-rule=dhcpd,req,load_balance:DHCPREQUEST for %.:@ip% from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
-# .id 10520061
-rule=dhcpd,req,load_balance:DHCPREQUEST for %.:@ip% (%-:@ip%) from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
-# .id 10520050
-rule=dhcpd,req:DHCPREQUEST for %.:@ip% from %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
-# .id 10520051
-rule=dhcpd,req:DHCPREQUEST for %.:@ip% from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
-# .id 10520052
-rule=dhcpd,req:DHCPREQUEST for %.:@ip% (%-:@ip%) from %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
-# .id 10520053
-rule=dhcpd,req:DHCPREQUEST for %.:@ip% (%-:@ip%) from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
+prefix=DHCPREQUEST for %.:@ip% 
+# .id 10523361
+rule=dhcpd,req,wrong_net:from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: wrong network
+# .id 10525195
+rule=dhcpd,req,wrong_net:(%-:@ip%) from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: wrong network
+# .id 10521264
+rule=dhcpd,req,wrong_net:from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: wrong network.
+# .id 10527847
+rule=dhcpd,req,wrong_net:(%-:@ip%) from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: wrong network.
+
+# .id 10525393
+rule=dhcpd,req,lease_owned_by_peer:from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer
+# .id 10522624
+rule=dhcpd,req,lease_owned_by_peer:from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer
+# .id 10521441
+rule=dhcpd,req,lease_owned_by_peer:(%-:@ip%) from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer
+# .id 10526682
+rule=dhcpd,req,lease_owned_by_peer:(%-:@ip%) from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer
+# .id 10521051
+rule=dhcpd,req,lease_owned_by_peer:from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer.
+# .id 10528407
+rule=dhcpd,req,lease_owned_by_peer:from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer.
+# .id 10522890
+rule=dhcpd,req,lease_owned_by_peer:(%-:@ip%) from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer.
+# .id 10524907
+rule=dhcpd,req,lease_owned_by_peer:(%-:@ip%) from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: lease owned by peer.
+
+# .id 10527434
+rule=dhcpd,req,unknown_lease:from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: unknown lease %.:@dst_ip%
+# .id 10523707
+rule=dhcpd,req,unknown_lease:from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: unknown lease %.:@dst_ip%
+# .id 10522497
+rule=dhcpd,req,unknown_lease:(%-:@ip%) from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: unknown lease %.:@dst_ip%
+# .id 10521512
+rule=dhcpd,req,unknown_lease:(%-:@ip%) from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: unknown lease %.:@dst_ip%
+# .id 10526061
+rule=dhcpd,req,unknown_lease:from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: unknown lease %.:@dst_ip%.
+# .id 10524323
+rule=dhcpd,req,unknown_lease:from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: unknown lease %.:@dst_ip%.
+# .id 10523747
+rule=dhcpd,req,unknown_lease:(%-:@ip%) from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: unknown lease %.:@dst_ip%.
+# .id 10524240
+rule=dhcpd,req,unknown_lease:(%-:@ip%) from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: unknown lease %.:@dst_ip%.
+
+# .id 10526335
+rule=dhcpd,req,load_balance:from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
+# .id 10526895
+rule=dhcpd,req,load_balance:from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
+# .id 10527300
+rule=dhcpd,req,load_balance:(%-:@ip%) from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
+
+# .id 10523998
+rule=dhcpd,req:from %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
+# .id 10524560
+rule=dhcpd,req:from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
+# .id 10523867
+rule=dhcpd,req:(%-:@ip%) from %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
+# .id 10526999
+rule=dhcpd,req:(%-:@ip%) from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
 
 
+###############################################################################
 #### DISCOVER
-# .id 10520100
-rule=dhcpd,discover:DHCPDISCOVER from %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
-# .id 10520101
-rule=dhcpd,discover:DHCPDISCOVER from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
-# .id 10520102
-rule=dhcpd,discover,load_balance:DHCPDISCOVER from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
-# .id 10520103
-rule=dhcpd,discover,load_balance:DHCPDISCOVER from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
+prefix=DHCPDISCOVER from %.:@mac% 
+# .id 10525158
+rule=dhcpd,discover:via %.:@ISC_DHCPD_if_or_ip%
+# .id 10525875
+rule=dhcpd,discover:(%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
+# .id 10524817
+rule=dhcpd,discover,load_balance:via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
+# .id 10527916
+rule=dhcpd,discover,load_balance:(%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: load balance to peer %.:@peer%
 
 
+###############################################################################
 #### INFORM
-# .id 10520152
-rule=dhcpd,inform,non_auth:DHCPINFORM from %.:@src_ip% via %.:@ISC_DHCPD_ip_or_if_to_colon%: not authoritative for subnet %.:@subnet_ip%
-# .id 10520151
-rule=dhcpd,inform:DHCPINFORM from %.:@src_ip% via %.:@ISC_DHCPD_if_or_ip%
+prefix=DHCPINFORM from %.:@src_ip% via 
+# .id 10525396
+rule=dhcpd,inform,non_auth:%.:@ISC_DHCPD_ip_or_if_to_colon%: not authoritative for subnet %.:@subnet_ip%
+# .id 10525091
+rule=dhcpd,inform:%.:@ISC_DHCPD_if_or_ip%
 
 
+###############################################################################
 #### NACK
-# .id 10520200
+prefix=
+# .id 10524280
 rule=dhcpd,nak:DHCPNAK on %.:@ip% to %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
 
 
+###############################################################################
 #### RELEASE
-# .id 10520201
-rule=dhcpd,release,found:DHCPRELEASE of %.:@ip% from %.:@mac% via %.:@ISC_DHCPD_if_or_ip% (found)
-# .id 10520202
-rule=dhcpd,release,found:DHCPRELEASE of %.:@ip% from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip% (found)
+prefix=DHCPRELEASE of %.:@ip% from %.:@mac% 
+# .id 10525982
+rule=dhcpd,release,found:via %.:@ISC_DHCPD_if_or_ip% (found)
+# .id 10523217
+rule=dhcpd,release,found:(%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip% (found)
 
 
+###############################################################################
 #### OFFER
-# .id 10520251
-rule=dhcpd,offer:DHCPOFFER on %.:@ip% to %.:@mac%
-# .id 10520252
-rule=dhcpd,offer:DHCPOFFER on %.:@ip% to %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
-# .id 10520253
-rule=dhcpd,offer:DHCPOFFER on %.:@ip% to %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
+prefix=DHCPOFFER on %.:@ip% to 
+# .id 10523230
+rule=dhcpd,offer:%.:@mac%
+# .id 10523944
+rule=dhcpd,offer:%.:@mac% via %.:@ISC_DHCPD_if_or_ip%
+# .id 10523401
+rule=dhcpd,offer:%.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
 
 
+###############################################################################
 #### DECLINE
-# .id 10520300
-rule=dhcpd,decline,not_found:DHCPDECLINE of %.:@ip% from %.:@mac% via %.:@ISC_DHCPD_ip_or_if_to_colon%: not found
-# .id 10520301
-rule=dhcpd,decline,not_found:DHCPDECLINE of %.:@ip% from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: not found
+prefix=DHCPDECLINE of %.:@ip% from %.:@mac% 
+# .id 10525263
+rule=dhcpd,decline,not_found:via %.:@ISC_DHCPD_ip_or_if_to_colon%: not found
+# .id 10526631
+rule=dhcpd,decline,not_found:(%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: not found
+# .id 10521284
+rule=dhcpd,decline,abandoned:(%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_ip_or_if_to_colon%: abandoned
 
 
+###############################################################################
 #### BOOTREQUEST
-# .id 10520350
-rule=dhcpd,boot_req:BOOTREQUEST from %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
-# .id 10520351
-rule=dhcpd,boot_req:BOOTREQUEST from %.:@mac% (%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
+prefix=BOOTREQUEST from %.:@mac% 
+# .id 10524276
+rule=dhcpd,boot_req:via %.:@ISC_DHCPD_if_or_ip%
+# .id 10527175
+rule=dhcpd,boot_req:(%.:@ISC_DHCPD_hostname%) via %.:@ISC_DHCPD_if_or_ip%
 
 
+###############################################################################
 #### BOOTREPLY
-# .id 10520400
+prefix=
+# .id 10523550
 rule=dhcpd,boot_reply:BOOTREPLY on %.:@ip% to %.:@mac% via %.:@ISC_DHCPD_if_or_ip%
 
 
+###############################################################################
 #### Abandoning
-# .id 10520451
-rule=dhcpd,dhcpd_abandoning,declined:Abandoning IP address %.:@ip_to_colon%: declined.
+prefix=Abandoning IP address %.:@ip_to_colon%: 
+# .id 10522345
+rule=dhcpd,dhcpd_abandoning,declined:declined
+# .id 10526134
+rule=dhcpd,dhcpd_abandoning,declined:declined.
+# .id 10523822
+rule=dhcpd,dhcpd_abandoning,ping_before_offer:pinged before offer
+# .id 10522721
+rule=dhcpd,dhcpd_abandoning,ping_before_offer:pinged before offer.
+
+
+###############################################################################
+#### Leases
+prefix=
+# .id 10522453
+rule=dhcpd,leases,wrote:Wrote %.:@n% leases to leases file
+# .id 10525152
+rule=dhcpd,leases,wrote:Wrote %.:@n% leases to leases file.
+# .id 10525303
+rule=dhcpd,leases,duplicate:uid lease %.:@ip% for client %.:@mac% is duplicate on %.:@subnet_ip%/%.:@prefix_len%
+# .id 10523281
+rule=dhcpd,leases,duplicate:client %.:@mac% has duplicate leases on %.:@subnet_ip%/%.:@prefix_len%
+
+###############################################################################
+#### Other
+prefix=
+# .id 10527372
+rule=dhcpd,multiple_if_on_shared_net:Multiple interfaces match the same subnet: %.:@ISC_DHCPD_if_or_ip% %.:@ISC_DHCPD_if2_to_colon%:v%.:@n%
+# .id 10523240
+rule=dhcpd,multiple_if_on_shared_net:Multiple interfaces match the same shared network: %.:@ISC_DHCPD_if_or_ip% %.:@ISC_DHCPD_if2_to_colon%:v%.:@n%
+
+
+###############################################################################
+#### Service
+prefix=
+# .id 10528290
+rule=dhcpd,service,start:Server starting service.
+# .id 10521342
+rule=dhcpd,service,stop:Received signal %.:@signal%, initiating shutdown.
+# .id 10528945
+rule=dhcpd,service,conf_file:Config file: %conf_file_path:rest%
+# .id 10523157
+rule=dhcpd,service,conf_file:Database file: %db_file_path:rest%
+# .id 10528125
+rule=dhcpd,service,copyright:Copyright %year_from:number%-%year_to:number% Internet Systems Consortium.
+# .id 10526657
+rule=dhcpd,service,all_rights_reserved:All rights reserved.
+# .id 10526615
+rule=dhcpd,service,info_link:For info, please visit %info_link:rest%
+# .id 10523797
+rule=dhcpd,service,software_version:Internet Systems Consortium DHCP Server %version:word%
+# .id 10527325
+rule=dhcpd,service,listen:Listening on%-:whitespace%Socket/%.:@ISC_DHCPD_if_to_slash%/%.:@ip%/%.:@prefix_len%
+# .id 10522600
+rule=dhcpd,service,sending:Sending on%-:whitespace%Socket/%.:@ISC_DHCPD_if_to_slash%/%.:@ip%/%.:@prefix_len%
+# .id 10528775
+rule=dhcpd,service,pid:PID file: %.:@file_path%
+# .id 10521162
+rule=dhcpd,service,disabling_output:Disabling output on%-:whitespace%Socket/%.:@ISC_DHCPD_if_to_slash%/%.:@ip%/%.:@prefix_len%
+# .id 10524677
+rule=dhcpd,service,disabling_input:Disabling input on%-:whitespace%Socket/%.:@ISC_DHCPD_if_to_slash%/%.:@ip%/%.:@prefix_len%
+
+# TODO:
+# host IDs including ") via" - fallback v1 regex rulebase
