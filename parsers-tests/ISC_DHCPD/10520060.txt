@@ -1,4 +1,0 @@
-DHCPREQUEST for 129.67.103.1 from 00:11:22:33:44:55 (billgates) via 129.67.103.254: load balance to peer OUCS-DHCP
-DHCPREQUEST for 129.67.100.80 from a1:b2:c3:d4:e5:f6 (billgates) via 1.2.3.4: load balance to peer OUCS-DHCP
-DHCPREQUEST for 129.67.100.80 from a1:b2:c3:d4:e5:f6 (billgates) via eth4: load balance to peer OUCS-DHCP
-DHCPREQUEST for 129.67.100.80 from a1:b2:c3:d4:e5:f6 (billgates) via eth1.234: load balance to peer OUCS-DHCP

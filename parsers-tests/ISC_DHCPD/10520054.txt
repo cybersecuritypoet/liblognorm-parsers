@@ -1,3 +1,0 @@
-DHCPREQUEST for 192.168.0.56 from 01:23:45:67:89:ab via 129.67.103.254: wrong network
-DHCPREQUEST for 192.168.0.56 from 01:23:45:67:89:ab via ins256: wrong network
-DHCPREQUEST for 192.168.0.56 from 01:23:45:67:89:ab via eth5.1023: wrong network

@@ -1,3 +1,0 @@
-BOOTREQUEST from 08:00:aa:bb:cc:dd via 129.67.103.254
-BOOTREQUEST from 08:00:aa:bb:cc:dd via eth3
-BOOTREQUEST from 08:00:aa:bb:cc:dd via eth3.1024

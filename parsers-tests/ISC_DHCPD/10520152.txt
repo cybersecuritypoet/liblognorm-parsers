@@ -1,1 +1,0 @@
-DHCPINFORM from 129.67.103.1 via eth0: not authoritative for subnet 168.1.2.0

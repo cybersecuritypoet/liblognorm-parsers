@@ -1,1 +1,0 @@
-DHCPDISCOVER from 00:11:22:33:44:55 via 129.67.103.254: load balance to peer OUCS-DHCP

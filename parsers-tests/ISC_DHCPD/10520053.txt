@@ -1,3 +1,0 @@
-DHCPREQUEST for 129.67.103.1 (163.1.2.2) from 00:11:22:33:44:55 (billgates) via 129.67.103.254
-DHCPREQUEST for 129.67.100.80 (163.1.2.2) from 00:11:22:33:44:55 (billgates) via ins256
-DHCPREQUEST for 129.67.103.10 (129.67.1.2) from 00:22:44:66:88:aa (steveballmer) via eth4.1234
